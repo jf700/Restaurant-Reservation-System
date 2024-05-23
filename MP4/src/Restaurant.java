@@ -51,12 +51,4 @@ public class Restaurant {
     public void addTable(Table table) {
         listOfTables.add(table);
     }
-
-    @Override
-    public String toString() {
-        return "Restaurant{" +
-                "listOfTables=" + listOfTables +
-                ", listOfReservations=" + listOfReservations +
-                '}';
-    }
 }
