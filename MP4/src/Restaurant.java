@@ -1,58 +1,62 @@
-import java.util.LinkedList;
-public class Restaurant
-{
-    private LinkedList<Tables> LinkedListOfTables;
-    private LinkedList<Reservations> LinkedListOfReservations;
+import java.util.ArrayList;
+import java.util.List;
 
-    public Restaurant()
-    {
-        LinkedListOfTables = new LinkedList<Tables>();
-        LinkedListOfReservations = new LinkedList<Reservations>();
-    }
-    public void addTable()
-    {
-        LinkedListOfTables.add(new Table(tableNumber));
-    }
-    public void addReservation(int reservationId, int tableNumber, int tableTime, String customerName)
-    {
-        Table table = findTableForReservation(tableNumber);
-        if (table != null && table.isAvailable) {
-            LinkedListOfReservations.add(new Reservation(tableNumber, reservationId, tableTime, customerName));
-            table.setAvailable(false);
-        } else {
-            System.out.println("The table is not available or does not exist.");
-        }
+public class Restaurant {
+    private List<Table> listOfTables;
+    private List<Reservation> listOfReservations;
 
+    public Restaurant() {
+        this.listOfTables = new ArrayList<>();
+        this.listOfReservations = new ArrayList<>();
     }
-    public void cancelReservation()
-    {
-        Reservation reservationToCancel = null;
-        for (Reservation reservation : LinkedListOfReservations) {
-            if (reservation.getReservationId() == reservationId) {
-                reservationToCancel = reservation;
-                break;
+
+    public boolean addReservation(Reservation reservation) {
+        System.out.println("Attempting to add reservation: " + reservation);
+        Table table = findTableForReservation(reservation.getNumberOfGuests());
+        if (table != null) {
+            System.out.println("Found table: " + table.getTableID() + " for reservation.");
+            if (table.isAvailable()) {
+                listOfReservations.add(reservation);
+                updateTableAvailability(table.getTableID(), false);
+                System.out.println("Reservation added successfully.");
+                return true;
+            } else {
+                System.out.println("Table found but it is not available.");
             }
+        } else {
+            System.out.println("No suitable table found for reservation.");
         }
-        if (reservationToCancel != null) {
-            LinkedListOfReservations.remove(reservationToCancel);
-            updateTableAvailability(reservationToCancel.getTableNumber(), true);
-        }
+        return false;
     }
 
-    private Table findTableForReservation(int tableNumber)
-    {
-        for (Table table: LinkedListOfTables) {
-            if (table.getTableNumber() == tableNumber) {
+
+    private Table findTableForReservation(int numberOfGuests) {
+        for (Table table : listOfTables) {
+            if (table.getCapacity() >= numberOfGuests) {
                 return table;
             }
         }
         return null;
     }
-    public void updateTableAvailability(int tableNumber, boolean isAvilable)
-    {
-        Table table = findTableForReservation(tableNumber);
-        if (table != null) {
-            table.setAvailable(availbility);
+
+    public void updateTableAvailability(int tableID, boolean isAvailable) {
+        for (Table table : listOfTables) {
+            if (table.getTableID() == tableID) {
+                table.setIsAvailable(isAvailable);
+                break;
+            }
         }
+    }
+
+    public void addTable(Table table) {
+        listOfTables.add(table);
+    }
+
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "listOfTables=" + listOfTables +
+                ", listOfReservations=" + listOfReservations +
+                '}';
     }
 }
