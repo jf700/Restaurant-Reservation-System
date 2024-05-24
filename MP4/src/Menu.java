@@ -1,21 +1,24 @@
-import java.util.LinkedList;
-
 public abstract class Menu {
-    protected LinkedList<String> menuItems;
+    private String name;
+    private double price;
 
-    public Menu(LinkedList<String> menuItems) {
-        this.menuItems = menuItems;
+    public Menu(String name, double price) {
+        this.name = name;
+        this.price = price;
     }
 
-    public abstract void displayMenuItems();
+    public abstract String getDescription();
 
-    public LinkedList<String> getMenuItems() {
-        return menuItems;
+    public String getName() {
+        return name;
     }
 
-    public void setMenuItems(LinkedList<String> menuItems) {
-        this.menuItems = menuItems;
+    public double getPrice() {
+        return price;
     }
 
+    @Override
+    public String toString() {
+        return getDescription() + ": $" + String.format("%.2f", price);
+    }
 }
-
