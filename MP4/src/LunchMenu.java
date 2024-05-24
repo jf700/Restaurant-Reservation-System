@@ -1,27 +1,45 @@
-import java.util.LinkedList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
-public class LunchMenu extends Menu {
-    public LunchMenu(LinkedList<String> menuItems) {
-        super(menuItems);
+public class LunchMenu {
+    private List<Menu> menuItems;
+
+    public LunchMenu() {
+        this.menuItems = new ArrayList<>();
     }
 
-    public void displayMenuItems() {
-        System.out.println("Lunch Menu:");
-        for (String item : menuItems) {
-            System.out.println("- " + item);
+    public void loadMenuItems(String filename) {
+        File file = new File(filename);
+        try {
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] parts = line.split(",");
+                if (parts.length == 2) {
+                    String name = parts[0].trim();
+                    double price = Double.parseDouble(parts[1].trim());
+                    menuItems.add(new LunchItem(name, price)); 
+                }
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: File not found - " + filename);
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Incorrect format in file. Price must be a number.");
         }
     }
 
-    public static void main(String[] args) {
-        LinkedList<String> items = new LinkedList<>();
-        items.add("Grilled Cheese Sandwich");
-        items.add("Caesar Salad");
-        items.add("Tomato Soup");
-        items.add("Fries");
-
-        LunchMenu lunchMenu = new LunchMenu(items);
-        
-        lunchMenu.displayMenuItems();
+    public void displayMenu() {
+        if (menuItems.isEmpty()) {
+            System.out.println("The menu is empty.");
+        } else {
+            System.out.println("Lunch Menu:");
+            for (Menu item : menuItems) {
+                System.out.println(item);
+            }
+        }
     }
-
 }
